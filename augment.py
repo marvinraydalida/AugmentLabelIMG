@@ -2,18 +2,51 @@ import imutils
 import cv2
 import os
 import re
+import random
 
 anglelist = [0,90,180,270]
+
+def blur(image):
+    return cv2.blur(image, (2,2))
+
+def adjust_contrast_brightness(image, contrast:float=3, brightness:int=1):
+    brightness += int(round(255*(1-contrast)/2))
+    return cv2.addWeighted(image, contrast, image, 0, brightness)
+
+def grayscale(image):
+    return cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    
+
+def random_augmentation(image, number):
+    if number == 0:
+        return blur(image)
+    elif number == 1:
+        return adjust_contrast_brightness(image)
+    elif number == 2:
+        return grayscale(image)
+    else:
+        return image
 
 def imagedrehen(pathtoimage, name):
     image = cv2.imread(pathtoimage)
     for angle in anglelist:
         rotated = imutils.rotate_bound(image, angle)
+        random_num = random.randint(0,5)
+        rotated = random_augmentation(rotated, random_num)
         cv2.waitKey(0)
-        cv2.imwrite('output/'+name[:-4] + '-' + str(angle) + '.JPG', rotated)
+        if file.endswith('.jpeg'):
+            cv2.imwrite('output/'+name[:-5] + '-' + str(angle) + '.jpeg', rotated)
+        if file.endswith('.jpg'):
+            cv2.imwrite('output/'+name[:-4] + '-' + str(angle) + '.jpg', rotated)
         print('image',name,'rotated',angle,'°')
 
 def xmldrehen(pathtoxml, xmlname):
+    extension = ""
+    len = 0
+    if file.endswith('.jpeg'):
+        extension = ".jpeg"
+    if file.endswith('.jpg'):
+        extension = ".jpg"
     old = open(pathtoxml, "r").readlines()
     for angle in anglelist:
         newxmlname = xmlname[:-4] + '-' + str(angle) + '.xml'
@@ -27,8 +60,9 @@ def xmldrehen(pathtoxml, xmlname):
                 elif '<path>' in line:
                     pass
                 elif '<filename>' in line:
-                    oldfilenametag = xmlname[:-4] + '.JPG'
-                    newfilenametag = newxmlname[:-4] + '.JPG'
+                    
+                    oldfilenametag = xmlname[:-4] + extension
+                    newfilenametag = newxmlname[:-4] + extension
                     line = line.replace(oldfilenametag, newfilenametag)
                     new.write(line)
                 else:
@@ -66,8 +100,8 @@ def xmldrehen(pathtoxml, xmlname):
                 elif '<path>' in line:
                     pass
                 elif '<filename>' in line:
-                    oldfilenametag = xmlname[:-4] + '.JPG'
-                    newfilenametag = newxmlname[:-4] + '.JPG'
+                    oldfilenametag = xmlname[:-4] + extension
+                    newfilenametag = newxmlname[:-4] + extension
                     line = line.replace(oldfilenametag, newfilenametag)
                     new.write(line)
                 elif '<width>' in line:
@@ -133,8 +167,8 @@ def xmldrehen(pathtoxml, xmlname):
                 elif '<path>' in line:
                     pass
                 elif '<filename>' in line:
-                    oldfilenametag = xmlname[:-4] + '.JPG'
-                    newfilenametag = newxmlname[:-4] + '.JPG'
+                    oldfilenametag = xmlname[:-4] + extension
+                    newfilenametag = newxmlname[:-4] + extension
                     line = line.replace(oldfilenametag, newfilenametag)
                     new.write(line)
                 elif '<ymax>' in line:
@@ -192,8 +226,8 @@ def xmldrehen(pathtoxml, xmlname):
                 elif '<path>' in line:
                     pass
                 elif '<filename>' in line:
-                    oldfilenametag = xmlname[:-4] + '.JPG'
-                    newfilenametag = newxmlname[:-4] + '.JPG'
+                    oldfilenametag = xmlname[:-4] + extension
+                    newfilenametag = newxmlname[:-4] + extension
                     line = line.replace(oldfilenametag, newfilenametag)
                     new.write(line)
                 elif '<ymax>' in line:
@@ -225,10 +259,19 @@ def imagemirror(pathtoimage, name):
     image = cv2.imread(pathtoimage)
     rotated = cv2.flip(image, flipCode=1)
     cv2.waitKey(0)
-    cv2.imwrite('output/' + name[:-4] + '-' + 'mirrored' + '.JPG', rotated)
+    if file.endswith('.jpeg'):
+        cv2.imwrite('output/' + name[:-5] + '-' + 'mirrored' + '.jpeg', rotated)
+    if file.endswith('.jpg'):
+        cv2.imwrite('output/' + name[:-4] + '-' + 'mirrored' + '.jpg', rotated)
     print('image', name, ' mirrored')
 
 def xmlmirror(pathtoxml, xmlname):
+    extension = ""
+    len = 0
+    if file.endswith('.jpeg'):
+        extension = ".jpeg"
+    if file.endswith('.jpg'):
+        extension = ".jpg"
     old = open(pathtoxml, "r").readlines()
     newxmlname = xmlname[:-4] + '-' + 'mirrored' + '.xml'
     print('XMLfile ' + xmlname + ' mirrored')
@@ -272,8 +315,8 @@ def xmlmirror(pathtoxml, xmlname):
         elif '<path>' in line:
             pass
         elif '<filename>' in line:
-            oldfilenametag = xmlname[:-4] + '.JPG'
-            newfilenametag = newxmlname[:-4] + '.JPG'
+            oldfilenametag = xmlname[:-4] + extension
+            newfilenametag = newxmlname[:-4] + extension
             line = line.replace(oldfilenametag, newfilenametag)
             new.write(line)
         elif '<ymin>' in line:
@@ -301,14 +344,18 @@ def xmlmirror(pathtoxml, xmlname):
 
 # rotate images and xml
 for file in os.listdir("dataset/"):
-    if file.endswith('.JPG'):
+    if file.endswith('.jpeg'):
+        imagedrehen('dataset/'+file, file)
+    if file.endswith('.jpg'):
         imagedrehen('dataset/'+file, file)
     if file.endswith('.xml'):
         xmldrehen('dataset/'+file, file)
 
 # mirror images and xml
 for file in os.listdir("output/"):
-    if file.endswith('.JPG'):
+    if file.endswith('.jpeg'):
+        imagemirror('output/'+file, file)
+    if file.endswith('.jpg'):
         imagemirror('output/'+file, file)
     if file.endswith('.xml'):
         xmlmirror('output/'+file, file)
