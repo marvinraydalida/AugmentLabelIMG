@@ -13,10 +13,10 @@ This version can also work with JPEG files.
 ## Example
 |rotation |random augment|not mirrored                      |mirrored                                            |
 |---------|----------------------|----------------------------------|----------------------------------------------------|
-|0°       |none                  |![0°](/output/sample-0.JPG)       |![0° mirrored](/output/sample-0-mirrored.JPG)       |
-|90°      |none                  |![90°](/output/sample-90.JPG)     |![90° mirrored](/output/sample-90-mirrored.JPG)     |
-|180°     |brightness + contrast |![180°](/output/sample-180.JPG)   |![180° mirrored](/output/sample-180-mirrored.JPG)   |
-|270°     |grayscale             |![270°](/output/sample-270.JPG)   |![270° mirrored](/output/sample-270-mirrored.JPG)   |
+|0°       |none                  |![0°](/output/sample-0.jpg)       |![0° mirrored](/output/sample-0-mirrored.jpg)       |
+|90°      |none                  |![90°](/output/sample-90.jpg)     |![90° mirrored](/output/sample-90-mirrored.jpg)     |
+|180°     |brightness + contrast |![180°](/output/sample-180.jpg)   |![180° mirrored](/output/sample-180-mirrored.jpg)   |
+|270°     |grayscale             |![270°](/output/sample-270.jpg)   |![270° mirrored](/output/sample-270-mirrored.jpg)   |
 
 ## Contributers
 @ockapunktnet
