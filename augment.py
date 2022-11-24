@@ -7,7 +7,7 @@ import random
 anglelist = [0,90,180,270]
 
 def blur(image):
-    return cv2.blur(image, (2,2))
+    return cv2.blur(image, (4,4))
 
 def adjust_contrast_brightness(image, contrast:float=3, brightness:int=1):
     brightness += int(round(255*(1-contrast)/2))
